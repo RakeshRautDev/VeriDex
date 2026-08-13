@@ -10,10 +10,18 @@ pinned: false
 short_description: Multimodal Claim Verification Engine
 ---
 
-# VeriDex: A Fake News Detection System Using Text Classification and Image Forensics
+<div align="center">
+  <h1>🛡️ VeriDex</h1>
+  <h3>A Hybrid Multi-Modal Credibility Assessment System</h3>
+  <p>Fake News Detection & Deepfake Image Forensics</p>
+  
+  [![Python](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org)
+  [![PyTorch](https://img.shields.io/badge/PyTorch-2.0%2B-ee4c2c.svg)](https://pytorch.org/)
+  [![Hugging Face Space](https://img.shields.io/badge/🤗%20Hugging%20Face-Space-orange)](https://huggingface.co/spaces/rex177/VeriDex)
+  [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+</div>
 
 **Author:** Rakesh Kumar Raut
-
 
 ---
 
@@ -31,20 +39,20 @@ VeriDex runs three independently trained deep-learning pipelines and brings thei
 
 VeriDex takes a modular approach, with three parallel pipelines feeding into a central Hybrid Resolution Engine. This complementary redundancy ensures that each pipeline thrives exactly where the others fall short.
 
-### 1. Pipeline A: Linguistic Deception Analyzer (HierFND)
+### 1. Linguistic Deception Analyzer (HierFND)
 Catches linguistic deception based on writing style and text artifacts.
-* **Model:** Fine-tuned RoBERTa-base sequence classifier.
+* **Model:** Fine-tuned `RoBERTa-base` sequence classifier.
 * **Training Data:** LIAR, ISOT, and WELFake datasets.
 * **Output:** A Linguistic Risk Score ($R_{ling}$) reflecting the probability of the text being machine-generated or stylistically deceptive.
 
-### 2. Pipeline B: Retrieval-Augmented Stance Aggregator (StanceFormer)
+### 2. Retrieval-Augmented Stance Aggregator (StanceFormer)
 Verifies claims against actual evidence via real-time web retrieval.
-* **Model:** Fine-tuned DeBERTa-v3-base Natural Language Inference (NLI) model.
+* **Model:** Fine-tuned `DeBERTa-v3-base` Natural Language Inference (NLI) model.
 * **Mechanism:** The claim triggers a web search API, pulling the top $k=10$ articles. 
 * **Domain-Credibility RAG:** Each article’s domain gets mapped to a Media Bias/Fact Check (MBFC) credibility multiplier (1.5 for high-credibility, 1.0 for neutral, 0.2 for questionable/satire).
 * **Output:** An Evidence Consensus Score ($E_{pro}$) indicating the factual support for the claim.
 
-### 3. Pipeline C: AI Image Forensics (CRAFT)
+### 3. AI Image Forensics (CRAFT)
 Pinpoints AI-generated images (deepfakes).
 * **Architecture:** Combines a CLIP ViT-B/32 semantic branch with LoRA adapters and a 2D FFT-based **FrequencyBranch**.
 * **Mechanism:** Merges 512-dimensional semantic features with 128-dimensional spectral features to catch checkerboard artifacts from GANs and diffusion models.
@@ -80,7 +88,7 @@ VeriDex was rigorously evaluated on a custom **500-claim adversarial benchmark**
 | **Recall (Fake)** | 0.9352 | LLM-Generated: 86.7% |
 | **Macro-F1** | 0.9468 | |
 
-> **Comparison to State-of-the-Art (SOTA):** VeriDex beats FakeBERT by +4.8 pp, VeraCT Scan by +3.3 pp, and classical TF-IDF+SVM approaches by +12.8 pp.
+> 🏆 **Comparison to State-of-the-Art (SOTA):** VeriDex beats FakeBERT by **+4.8 pp**, VeraCT Scan by **+3.3 pp**, and classical TF-IDF+SVM approaches by **+12.8 pp**.
 
 ### Image Forensics (CRAFT) Performance
 Tested on a rigorous cross-generator protocol against 50,000 images (DALL-E 2, Midjourney v5, ProGAN, StyleGAN).
@@ -113,30 +121,25 @@ pip install -r requirements.txt
 ```
 
 ### 2. Environment Variables
-Copy `.env.example` to `.env` inside `VeriDex_WebApp` and configure your API keys.
+You need a Tavily API key for the Retrieval-Augmented web search.
+Copy `.env.example` to `.env` and configure your API keys.
 ```bash
-cd VeriDex_WebApp
 cp .env.example .env
+# Edit .env to include: TAVILY_API_KEY=your_key_here
 ```
-Edit `.env` to include your search API keys: `TAVILY_API_KEY=your_key_here`
 
-### 3. Model Weights Setup
-> [!IMPORTANT]
-> Due to GitHub's file size constraints (100MB max per file), heavy binary model weights are **NOT included** in this repository. 
-> 
-> You must download the pre-trained weights separately and place them in their respective model directories:
-> - `models/fakeNewsModel/pytorch_model.bin`
-> - `models/stanceModel/model.safetensors`
-> - `models/imageDetectionModel/best_model.pth`
+### 3. Automatic Model Weights Setup
+✨ **New Feature:** You do not need to manually download heavy model binaries anymore! 
 
-### 4. Run the Web Application
+When you run `app.py`, the system will automatically connect to the `rex177/VeriDex-Weights` repository on Hugging Face Hub and dynamically download the fine-tuned RoBERTa, DeBERTa, and Image Forensics models to your local `models/` directory.
+
+### 4. Run the Gradio Application
 ```bash
-cd VeriDex_WebApp
-uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+python app.py
 ```
-Open `http://localhost:8000/static/index.html` in your browser to access the verification dashboard.
+Open the provided local URL (typically `http://127.0.0.1:7860`) in your browser to access the VeriDex verification dashboard.
 
 ---
 
 ## 📝 License
-MIT License
+Distributed under the MIT License. See `LICENSE` for more information.
