@@ -1,14 +1,4 @@
----
-title: VeriDex
-emoji: 🛡️
-colorFrom: blue
-colorTo: indigo
-sdk: gradio
-sdk_version: 4.19.2
-app_file: app.py
-pinned: false
-short_description: Multimodal Claim Verification Engine
----
+
 
 <div align="center">
   <h1>🛡️ VeriDex</h1>
