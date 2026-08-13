@@ -1,0 +1,8 @@
+{
+    "model": "Fake News Detection (RoBERTa)",
+    "accuracy": 0.982,
+    "precision": 0.9806179050567596,
+    "recall": 0.9834006389983619,
+    "f1_score": 0.9818107591380725,
+    "samples_evaluated": 500
+}

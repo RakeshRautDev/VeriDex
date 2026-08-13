@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VeriDex | Next-Gen AI Fact-Checking & Verification</title>
+    <meta name="description" content="VeriDex — Hybrid AI Credibility Assessment System combining linguistic analysis, live evidence retrieval, and AI-generated image detection.">
+    <link rel="stylesheet" href="/static/style.css?v=3">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>VeriDex</h1>
+            <p class="subtitle">Hybrid Credibility Assessment System</p>
+        </header>
+
+        <main>
+            <div class="input-card glass-panel" id="inputCard">
+                <h2>Analyze Content</h2>
+                <p class="input-subtitle">Enter text, upload an image, or both for a comprehensive credibility check.</p>
+
+                <div class="mode-indicator">
+                    <div class="mode-pill" id="modePill" data-mode="empty">
+                        <span class="mode-dot"></span>
+                        <span class="mode-text">Awaiting Input</span>
+                    </div>
+                </div>
+
+                <form id="verifyForm">
+                    <div class="input-group" id="textInputGroup">
+                        <label for="newsText">News Statement / Claim</label>
+                        <textarea id="newsText" name="text" rows="3" placeholder="Enter a statement or news claim to verify..."></textarea>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="newsImage">Evidence Image</label>
+                        <div class="file-upload-zone" id="uploadZone">
+                            <input type="file" id="newsImage" name="image" accept="image/*">
+                            <div class="upload-placeholder" id="uploadPlaceholder">
+                                <span class="upload-icon">📷</span>
+                                <span class="upload-text">Drop an image here or click to upload</span>
+                                <span class="upload-hint">Supports JPG, PNG, WEBP</span>
+                            </div>
+                            <div class="image-preview-container" id="imagePreview">
+                                <img class="image-preview-thumb" id="previewThumb" alt="Preview">
+                                <div class="image-preview-info">
+                                    <div class="image-preview-name" id="previewName"></div>
+                                    <div class="image-preview-size" id="previewSize"></div>
+                                </div>
+                                <button type="button" class="image-remove-btn" id="removeImageBtn" title="Remove image">✕</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submitBtn" class="btn-primary">
+                        <span class="btn-text" id="btnText">Verify Truth</span>
+                        <span class="loader" id="loader"></span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- ========== IMAGE-ONLY RESULTS ========== -->
+            <div id="imageOnlyResults" class="results-section hidden">
+                <div class="glass-panel verdict-banner" id="imgVerdictBanner">
+                    <div class="section-label">Image Verification Report</div>
+                    <div class="verdict-tag" id="imgVerdictTag">...</div>
+                    <div class="risk-score-display" id="imgRiskScore">0%</div>
+                    <div class="risk-score-label">AI-Generated Risk</div>
+                </div>
+
+                <div class="glass-panel stat-card">
+                    <h4>Visual Integrity Confidence</h4>
+                    <p class="stat-desc">AI-generated image detection via Vision Transformer</p>
+                    <div class="gauge-container">
+                        <div class="gauge">
+                            <svg viewBox="0 0 140 140">
+                                <circle class="gauge-bg" cx="70" cy="70" r="58"></circle>
+                                <circle class="gauge-fill danger" id="imgTamperedGauge" cx="70" cy="70" r="58"
+                                    stroke-dasharray="364.42" stroke-dashoffset="364.42"></circle>
+                            </svg>
+                            <div class="gauge-center">
+                                <div class="gauge-value danger" id="imgTamperedVal">0%</div>
+                            </div>
+                            <div class="gauge-label">AI Generated</div>
+                        </div>
+                        <div class="gauge">
+                            <svg viewBox="0 0 140 140">
+                                <circle class="gauge-bg" cx="70" cy="70" r="58"></circle>
+                                <circle class="gauge-fill success" id="imgAuthenticGauge" cx="70" cy="70" r="58"
+                                    stroke-dasharray="364.42" stroke-dashoffset="364.42"></circle>
+                            </svg>
+                            <div class="gauge-center">
+                                <div class="gauge-value success" id="imgAuthenticVal">0%</div>
+                            </div>
+                            <div class="gauge-label">Authentic</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="image-comparison-grid" id="imgComparisonGrid">
+                    <div class="glass-panel image-panel">
+                        <h4>Original Image</h4>
+                        <img id="imgOriginal" alt="Uploaded Image">
+                    </div>
+                    <div class="glass-panel image-panel">
+                        <h4>AI Detection Heatmap</h4>
+                        <img id="imgHeatmap" alt="AI Detection Heatmap">
+                    </div>
+                </div>
+
+                <div class="glass-panel">
+                    <div class="logic-summary" id="imgLogicSummary">...</div>
+                </div>
+            </div>
+
+            <!-- ========== TEXT-ONLY RESULTS ========== -->
+            <div id="textOnlyResults" class="results-section hidden">
+                <div class="glass-panel verdict-banner" id="textVerdictBanner">
+                    <div class="section-label">Text Credibility Report</div>
+                    <div class="verdict-tag" id="textVerdictTag">...</div>
+                    <div class="risk-score-display" id="textRiskScore">0%</div>
+                    <div class="risk-score-label">Misinformation Risk</div>
+                    <div class="logic-breakdown" id="textLogicBreakdown">
+                        <div class="logic-row">
+                            <span class="logic-label">Fake News Model (Linguistics):</span>
+                            <span class="logic-value" id="textLogicFake">...</span>
+                        </div>
+                        <div class="logic-row">
+                            <span class="logic-label">Stance Model (Evidence Aggregation):</span>
+                            <span class="logic-value" id="textLogicStance">...</span>
+                        </div>
+                    </div>
+                    <div class="logic-summary" id="textLogicSummary">...</div>
+                </div>
+
+                <div class="glass-panel stat-card">
+                    <h4>Linguistic Deception Check</h4>
+                    <p class="stat-desc">Analyzed by RoBERTa Fake News Model</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>Fake Probability</span>
+                            <span class="prob-value" id="textFakeProbVal">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill fake-fill" id="textFakeProbFill"></div>
+                        </div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-label">
+                            <span>Real Probability</span>
+                            <span class="prob-value" id="textRealProbVal">100%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill real-fill" id="textRealProbFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-panel evidence-card">
+                    <h4>Live Evidence (Retrieval-Augmented Stance)</h4>
+                    <p class="stat-desc">Top live news articles cross-referenced by DeBERTa Stance Model</p>
+                    <div id="textEvidenceList" class="evidence-list"></div>
+                </div>
+            </div>
+
+            <!-- ========== COMBINED RESULTS ========== -->
+            <div id="combinedResults" class="results-section hidden">
+                <div class="glass-panel verdict-banner" id="comboVerdictBanner">
+                    <div class="section-label">Combined Credibility Report</div>
+                    <div class="verdict-tag" id="comboVerdictTag">...</div>
+                    <div class="risk-score-display" id="comboRiskScore">0%</div>
+                    <div class="risk-score-label">Overall Risk Score</div>
+                    <div class="logic-breakdown">
+                        <div class="logic-row">
+                            <span class="logic-label">Fake News Model (Linguistics):</span>
+                            <span class="logic-value" id="comboLogicFake">...</span>
+                        </div>
+                        <div class="logic-row">
+                            <span class="logic-label">Stance Model (Evidence):</span>
+                            <span class="logic-value" id="comboLogicStance">...</span>
+                        </div>
+                        <div class="logic-row">
+                            <span class="logic-label">Image Integrity:</span>
+                            <span class="logic-value" id="comboLogicImage">...</span>
+                        </div>
+                    </div>
+                    <div class="logic-summary" id="comboLogicSummary">...</div>
+                </div>
+
+                <div class="combined-grid">
+                    <!-- Left Column: Text Analysis -->
+                    <div class="glass-panel">
+                        <div class="combined-column-header">
+                            <span class="column-icon">📝</span>
+                            <span class="column-title">Text Analysis</span>
+                            <span class="column-subtitle">RoBERTa + DeBERTa</span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-label">
+                                <span>Fake Probability</span>
+                                <span class="prob-value" id="comboFakeProbVal">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill fake-fill" id="comboFakeProbFill"></div>
+                            </div>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-label">
+                                <span>Real Probability</span>
+                                <span class="prob-value" id="comboRealProbVal">100%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill real-fill" id="comboRealProbFill"></div>
+                            </div>
+                        </div>
+                        <div id="comboEvidenceList" class="evidence-list" style="margin-top: 1rem;"></div>
+                    </div>
+
+                    <!-- Right Column: Image Analysis -->
+                    <div class="glass-panel">
+                        <div class="combined-column-header">
+                            <span class="column-icon">🖼️</span>
+                            <span class="column-title">Image Analysis</span>
+                            <span class="column-subtitle">ViT AI Detection</span>
+                        </div>
+                        <div class="image-status-compact" id="comboImageStatus">
+                            <span class="status-dot neutral" id="comboStatusDot"></span>
+                            <span class="image-status-text" id="comboStatusText">Analyzing...</span>
+                        </div>
+                        <div class="gauge-container" style="padding: 0.5rem 0;">
+                            <div class="gauge">
+                                <svg viewBox="0 0 140 140">
+                                    <circle class="gauge-bg" cx="70" cy="70" r="58"></circle>
+                                    <circle class="gauge-fill danger" id="comboTamperedGauge" cx="70" cy="70" r="58"
+                                        stroke-dasharray="364.42" stroke-dashoffset="364.42"></circle>
+                                </svg>
+                                <div class="gauge-center">
+                                    <div class="gauge-value danger" id="comboTamperedVal">0%</div>
+                                </div>
+                                <div class="gauge-label">AI Generated</div>
+                            </div>
+                        </div>
+                        <img id="comboHeatmap" class="compact-heatmap" alt="Heatmap" style="display:none;">
+                    </div>
+                </div>
+
+                <div class="glass-panel evidence-card" id="comboEvidenceCard" style="display:none;">
+                    <h4>Live Evidence (Retrieval-Augmented Stance)</h4>
+                    <p class="stat-desc">Top live news articles cross-referenced by DeBERTa Stance Model</p>
+                    <div id="comboEvidenceListFull" class="evidence-list"></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="/static/script.js?v=3"></script>
+</body>
+</html>

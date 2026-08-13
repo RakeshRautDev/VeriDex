@@ -1,0 +1,10 @@
+{
+  "model_type": "resnet50",
+  "num_classes": 2,
+  "classes": ["Pristine", "Forged"],
+  "input_size": [224, 224],
+  "mean": [0.485, 0.456, 0.406],
+  "std": [0.229, 0.224, 0.225],
+  "epochs_trained": 50,
+  "best_val_accuracy": 0.942
+}

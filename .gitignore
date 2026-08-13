@@ -1,0 +1,66 @@
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch / Machine Learning Models
+*.pth
+*.pt
+*.bin
+*.safetensors
+checkpoint-*/
+models/fakeNewsModel/pytorch_model.bin
+models/stanceModel/model.safetensors
+models/imageDetectionModel/best_model.pth
+
+# However, keep classifier_head.pt as it's small and necessary
+!models/stanceModel/classifier_head.pt
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code / IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+*.pdf
+.uncomment-backups/
+
+*.png
+*.pt
+*.model

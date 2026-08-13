@@ -1,0 +1,26 @@
+{
+    "Fake_News_Old_GonzaloA": {
+        "accuracy": 0.982,
+        "precision": 0.9806179050567596,
+        "recall": 0.9834006389983619,
+        "f1_score": 0.9818107591380725
+    },
+    "Fake_News_New_mrm8488": {
+        "accuracy": 0.998,
+        "precision": 0.9978070175438596,
+        "recall": 0.9981684981684982,
+        "f1_score": 0.9979836677084384
+    },
+    "Stance_Old_IBM": {
+        "accuracy": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1_score": 1.0
+    },
+    "Stance_New_TweetEval": {
+        "accuracy": 0.9328358208955224,
+        "precision": 0.7752732240437159,
+        "recall": 0.7978566149297857,
+        "f1_score": 0.785980479148181
+    }
+}

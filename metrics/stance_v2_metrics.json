@@ -1,0 +1,9 @@
+{
+    "model": "Stance Detection (DeBERTa)",
+    "dataset": "TweetEval (Stance Climate)",
+    "accuracy": 0.9328358208955224,
+    "precision": 0.7752732240437159,
+    "recall": 0.7978566149297857,
+    "f1_score": 0.785980479148181,
+    "samples_evaluated": 134
+}

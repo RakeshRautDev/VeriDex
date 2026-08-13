@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+pydantic
+python-multipart
+tavily-python
+python-dotenv
+torch
+transformers
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+tqdm
+gradio
+huggingface-hub
